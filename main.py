@@ -1,4 +1,7 @@
 import os
+import sys
+
+from stats import count_character
 
 
 def get_book_text(file_path):
@@ -9,32 +12,15 @@ def get_book_text(file_path):
         raise e
 
 
-def sort_on(dict):
-    return dict["num"]
-
-
-def count_character(text):
-    appear_characters = {}
-    words = text.split()
-
-    for word in words:
-        for character in word:
-            if character.isalpha():
-                lowercase_char = character.lower()
-                appear_characters[lowercase_char] = (
-                    appear_characters.get(lowercase_char, 0) + 1
-                )
-
-    character_count = []
-    for character in appear_characters:
-        character_count.append({"name": character, "num": appear_characters[character]})
-
-    character_count.sort(reverse=True, key=sort_on)
-    return len(words), character_count
-
-
 def main():
-    book_path = "books/frankenstein.txt"
+    if len(sys.argv) < 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+
+    book_path = sys.argv[1]
+    count_words = 0
+    appear_characters = {}
+
     print(f"--- Begin report of {book_path} ---")
 
     file_path = os.path.join(os.getcwd(), book_path)
@@ -46,7 +32,7 @@ def main():
 
     print()
     for character in appear_characters:
-        print(f"The '{character['name']}' character was found {character['num']} times")
+        print(f"{character['name']}: {character['num']}")
 
     print("--- End report ---")
 
